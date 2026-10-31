@@ -4,10 +4,12 @@
 
 REPORT ITEM                                  VALUE
 --------------------------------------------------
-Base Color Selection:.....................Hot Pink
-Additional Colors Needed:........................2
-Cost per Paint Pot:...........$...............4.95
-Estimated Pots Needed:...........................3
+Base Color Selection:..........................REd
+Color Theory Selected:.........Split Complementary
+Additional Colors Needed:........................3
+Preferred Paint Brand:..............Citadel Colour
+Cost per Paint Pot:...........$...............4.75
+Estimated Pots Needed:...........................4
 --------------------------------------------------
-Total Estimated Paint Cost:...$..............14.85
+Total Estimated Paint Cost:...$..............19.00
 ==================================================

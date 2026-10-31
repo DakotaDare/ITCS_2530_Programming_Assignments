@@ -23,34 +23,118 @@ int main() {
     cout << "======================================================\n" << endl;
     cout << "This program will help you estimate the cost of your miniature paint scheme based on..." << endl;
     cout << "your base color selection," << endl;
-    cout << "the number of additional colors needed," << endl;
-    cout << "and the price of a single paint pot.\n" << endl;
+    cout << "the method of color theory you'd like to use," << endl;
+    cout << "and your preferred paint brand.\n" << endl;
     cout << "After entering all data, the program will save a copy of the report! \n" << endl;
 
     // variables
     string baseColor;
     int extraColors;
+	int theoryChoice;
+	string theoryName;
+	int brandChoice;
+	string brandName;
     double potPrice;
 
     // string input that can include spaces (example: "Light Blue")
     cout << "Enter the name of your base paint color: " << endl;
     getline(cin, baseColor);
+	cout << "\n> You selected " << baseColor << " as your base color.\n" << endl;
 
     // integer input for the count of additional colors
-    cout << "Enter the number of additional colors needed: " << endl;
-    cin >> extraColors;
+    // display selections
+    cout << "Please select the number for color theory to apply\n";
+    cout << "1. Analogous\n";
+    cout << "2. Complementary\n";
+    cout << "3. Split Complementary\n";
+    cout << "4. Triadic\n";
+	cout << "5. Tetradic\n";
+	cout << "6. Square\n";
+    cout << "Enter your choice (1-6): ";
 
-    // input failure handling
-    cin.clear();
-    cin.ignore(100, '\n');
+    cin >> theoryChoice;
 
-    // double input for the price of a single paint pot
-    cout << "Enter the price of one paint pot ($): " << endl;
-    cin >> potPrice;
+	// switch case for the color theory selection and the number of additional colors needed for each theory.
+    switch (theoryChoice) {
+    case 1:
+        cout << "\n> You selected Analogous color theory.\n";
+        extraColors = 2;
+		theoryName = "Analogous";
+        break;
+    case 2:
+        cout << "\n> You selected Complementary color theory.\n";
+        extraColors = 2;
+		theoryName = "Complementary";
+        break;
+    case 3:
+        cout << "\n> You selected Split Complementary color theory.\n";
+        extraColors = 3;
+		theoryName = "Split Complementary";
+        break;
+    case 4:
+        cout << "\n> You selected Triadic color theory.\n";
+        extraColors = 2;
+		theoryName = "Triadic";
+        break;
+    case 5:
+        cout << "\n> You selected Tetradic color theory.\n";
+        extraColors = 3;
+		theoryName = "Tetradic";
+        break;
+    case 6:
+        cout << "\n> You selected Square color theory.\n";
+        extraColors = 4;
+		theoryName = "Square";
+        break;
+    default:
+		// using an if statement inside default for wrong selection handling, and defaulting to Complementary color theory if the user enters an invalid choice.
+        if (theoryChoice != 1 || 2 || 3 || 4 || 5 || 6) {
+            cout << "Invalid choice. Using Complementary color theory.\n";
+			extraColors = 2;
+			theoryName = "Complementary";
+        }
+        else {
+            break;
+        }
+        break;
+    }
 
-    // input failure handling again
-    cin.clear();
-    cin.ignore(100, '\n');
+	// integer input for paint brand selection
+    cout << "Please select your preferred paint brand:\n";
+    cout << "1. The Army Painter\n";
+    cout << "2. Vallejo\n";
+    cout << "3. Citadel Colour\n";
+    cout << "Enter your choice (1-3): ";
+    cin >> brandChoice;
+
+	switch (brandChoice) {
+    case 1:
+        cout << "\n> You selected The Army Painter.\n";
+		potPrice = 5.13; // default price for The Army Painter base color
+		brandName = "The Army Painter";
+        break;
+    case 2:
+        cout << "\n> You selected Vallejo.\n";
+		potPrice = 3.39; // default price for Vallejo base color
+		brandName = "Vallejo";
+        break;
+    case 3:
+        cout << "\n> You selected Citadel Colour.\n";
+		potPrice = 4.75; // default price for Citadel Colour base color
+		brandName = "Citadel Colour";
+        break;
+    default:
+        // using an if statement inside default for wrong selection handling, and defaulting to Citadel Colour if the user enters an invalid choice.
+        if (brandChoice != 1 || 2 || 3) {
+            cout << "Invalid choice. Using Citadel Colour.\n";
+            potPrice  = 4.75;
+			brandName = "Citadel Colour";
+        }
+        else {
+            break;
+        }
+		break;
+	}
 
     // calculate estimated cost of paint for base color and extra colors.
     int potsNeeded = extraColors + 1;
@@ -60,8 +144,10 @@ int main() {
     cout << "\n" << left << setw(30) << "REPORT ITEM" << right << setw(20) << "VALUE" << endl;
     cout << string(50, '-') << endl;
     cout << left << setw(30) << setfill('.') << "Base Color Selection:" << right << setw(20) << baseColor << endl;
+	cout << left << setw(30) << setfill('.') << "Color Theory Selected:" << right << setw(20) << theoryName << endl;
     cout << left << setw(30) << setfill('.') << "Additional Colors Needed:" << right << setw(20) << extraColors << endl;
     cout << fixed << setprecision(2); // floating-point outputs to 2 decimals (price)
+	cout << left << setw(30) << setfill('.') << "Preferred Paint Brand:" << right << setw(20) << brandName << endl;
     cout << left << setw(30) << setfill('.') << "Cost per Paint Pot:" << right << "$" << setw(19) << potPrice << endl;
     cout << left << setw(30) << setfill('.') << "Estimated Pots Needed:" << right << setw(20) << potsNeeded << endl;
     cout << string(50, '-') << endl;
@@ -79,8 +165,10 @@ int main() {
     outFile << left << setw(30) << "REPORT ITEM" << right << setw(20) << "VALUE" << endl;
     outFile << string(50, '-') << endl;
     outFile << left << setw(30) << setfill('.') << "Base Color Selection:" << right << setw(20) << baseColor << endl;
+    outFile << left << setw(30) << setfill('.') << "Color Theory Selected:" << right << setw(20) << theoryName << endl;
     outFile << left << setw(30) << setfill('.') << "Additional Colors Needed:" << right << setw(20) << extraColors << endl;
     outFile << fixed << setprecision(2);
+	outFile << left << setw(30) << setfill('.') << "Preferred Paint Brand:" << right << setw(20) << brandName << endl;
     outFile << left << setw(30) << setfill('.') << "Cost per Paint Pot:" << right << "$" << setw(19) << potPrice << endl;
     outFile << left << setw(30) << setfill('.') << "Estimated Pots Needed:" << right << setw(20) << potsNeeded << endl;
     outFile << string(50, '-') << endl;
