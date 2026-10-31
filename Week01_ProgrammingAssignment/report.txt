@@ -1,0 +1,15 @@
+==================================================
+   MPSP (MINIATURE PAINT SCHEME PLANNER) REPORT   
+==================================================
+
+REPORT ITEM                                  VALUE
+--------------------------------------------------
+Base Color Selection:..........................REd
+Color Theory Selected:.........Split Complementary
+Additional Colors Needed:........................3
+Preferred Paint Brand:..............Citadel Colour
+Cost per Paint Pot:...........$...............4.75
+Estimated Pots Needed:...........................4
+--------------------------------------------------
+Total Estimated Paint Cost:...$..............19.00
+==================================================
