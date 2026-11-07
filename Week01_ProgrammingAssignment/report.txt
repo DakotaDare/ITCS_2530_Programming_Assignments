@@ -4,12 +4,16 @@
 
 REPORT ITEM                                  VALUE
 --------------------------------------------------
-Base Color Selection:..........................REd
-Color Theory Selected:.........Split Complementary
-Additional Colors Needed:........................3
-Preferred Paint Brand:..............Citadel Colour
-Cost per Paint Pot:...........$...............4.75
-Estimated Pots Needed:...........................4
+Base Color Selection:...................Light Blue
+Color Theory Selected:.....................Triadic
+Additional Colors Needed:........................2
+Preferred Paint Brand:.....................Vallejo
+Cost per Paint Pot:...........$...............3.39
+Estimated Base Pots Needed:......................3
+Primer Pots:.....................................1
+Metallic Pots:...................................0
+Wash Pots:.......................................1
+Additional Paint Cost:........$..............17.74
 --------------------------------------------------
-Total Estimated Paint Cost:...$..............19.00
+Total Estimated Paint Cost:...$..............27.91
 ==================================================
