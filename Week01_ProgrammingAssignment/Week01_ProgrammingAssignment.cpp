@@ -359,45 +359,85 @@ void selectAdditionalPaints(int& primerPots, double& primerPrice,
 {
     char answer;
 
-    // Each loop entry represents one optional paint type.
-    const string prompts[] = {
-        "\nDo you need primer? ($9.99) (y/n): ",
-        "\nDo you need a metallic paint? ($7.75) (y/n): ",
-        "\nDo you need a wash? ($7.75) (y/n): "
-    };
-    int* pots[] = { &primerPots, &metallicPots, &washPots };
-    double* prices[] = { &primerPrice, &metallicPrice, &washPrice };
-    const double costs[] = { 9.99, 7.75, 7.75 };
-    const string names[] = { "Primer", "Metallic paint", "Wash" };
-
-    for (int paintChoice = 0; paintChoice < 3; paintChoice++)
+    do
     {
-        do
-        {
-            cout << prompts[paintChoice];
-            cin >> answer;
+        cout << "\nDo you need primer? ($9.99) (y/n): ";
+        cin >> answer;
 
-            if (answer != 'y' && answer != 'Y' &&
-                answer != 'n' && answer != 'N')
-            {
-                cout << "Invalid answer. Please enter y or n.\n";
-                cin.ignore(1000, '\n');
-            }
-        } while (answer != 'y' && answer != 'Y' &&
-            answer != 'n' && answer != 'N');
+        if (answer != 'y' && answer != 'Y' &&
+            answer != 'n' && answer != 'N')
+        {
+            cout << "Invalid answer. Please enter y or n.\n";
+            cin.ignore(1000, '\n');
+        }
+    } while (answer != 'y' && answer != 'Y' &&
+        answer != 'n' && answer != 'N');
 
-        if (answer == 'y' || answer == 'Y')
+    if (answer == 'y' || answer == 'Y')
+    {
+        primerPots = 1;
+        primerPrice = 9.99;
+        cout << "Primer added.\n";
+    }
+    else
+    {
+        primerPots = 0;
+        primerPrice = 0.0;
+        cout << "Primer not added.\n";
+    }
+
+    do
+    {
+        cout << "\nDo you need a metallic paint? ($7.75) (y/n): ";
+        cin >> answer;
+
+        if (answer != 'y' && answer != 'Y' &&
+            answer != 'n' && answer != 'N')
         {
-            *pots[paintChoice] = 1;
-            *prices[paintChoice] = costs[paintChoice];
-            cout << names[paintChoice] << " added.\n";
+            cout << "Invalid answer. Please enter y or n.\n";
+            cin.ignore(1000, '\n');
         }
-        else
+    } while (answer != 'y' && answer != 'Y' &&
+        answer != 'n' && answer != 'N');
+
+    if (answer == 'y' || answer == 'Y')
+    {
+        metallicPots = 1;
+        metallicPrice = 7.75;
+        cout << "Metallic paint added.\n";
+    }
+    else
+    {
+        metallicPots = 0;
+        metallicPrice = 0.0;
+        cout << "Metallic paint not added.\n";
+    }
+
+    do
+    {
+        cout << "\nDo you need a wash? ($7.75) (y/n): ";
+        cin >> answer;
+
+        if (answer != 'y' && answer != 'Y' &&
+            answer != 'n' && answer != 'N')
         {
-            *pots[paintChoice] = 0;
-            *prices[paintChoice] = 0.0;
-            cout << names[paintChoice] << " not added.\n";
+            cout << "Invalid answer. Please enter y or n.\n";
+            cin.ignore(1000, '\n');
         }
+    } while (answer != 'y' && answer != 'Y' &&
+        answer != 'n' && answer != 'N');
+
+    if (answer == 'y' || answer == 'Y')
+    {
+        washPots = 1;
+        washPrice = 7.75;
+        cout << "Wash added.\n";
+    }
+    else
+    {
+        washPots = 0;
+        washPrice = 0.0;
+        cout << "Wash not added.\n";
     }
 
     // Calculate the cost of all selected optional paints.
