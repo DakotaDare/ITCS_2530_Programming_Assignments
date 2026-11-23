@@ -1,6 +1,3 @@
-// Week01_ProgrammingAssignment.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -9,515 +6,388 @@
 
 using namespace std;
 
-// writes the report table to whichever output stream is provided.
-// using the same function keeps the console report and report.txt consistent.
-void writeReportTable(ostream& report, const string& baseColor,
-    const string& theoryName, const string& brandName, int extraColors,
-    double potPrice, int potsNeeded, int primerPots, int metallicPots,
-    int washPots, double additionalPaintCost, double totalEstimatedCost);
-
-// displays the color choices and changes the console text color.
-void changeTextColor();
-
-// displays the program's opening banner.
-void displayOpeningBanner();
-
-// displays the main menu and the current selections.
-void displayMainMenu(const string& baseColor, const string& theoryName,
-    const string& brandName);
-
-// base color selection
-void selectBaseColor(string& baseColor, bool& baseColorSelected);
-// color theory selection
-void selectColorTheory(int& extraColors, string& theoryName,
-    bool& theorySelected);
-// paint brand selection
-void selectPaintBrand(double& potPrice, string& brandName,
-    bool& brandSelected);
-// additional paint selection
-void selectAdditionalPaints(int& primerPots, double& primerPrice,
-    int& metallicPots, double& metallicPrice, int& washPots,
-    double& washPrice, double& additionalPaintCost);
-
-int main()
+// This defines a type, not a global variable.
+enum PaintBrand
 {
-    displayOpeningBanner();
+    ARMY_PAINTER = 1,
+    VALLEJO = 2,
+    CITADEL = 3
+};
 
-    // main variables
-    string baseColor;
-    string theoryName;
-    string brandName;
+void displayOpeningBanner()
+{
+    cout << "==================================================\n";
+    cout << "  WELCOME TO MPSP - MINIATURE PAINT SCHEME PLANNER\n";
+    cout << "==================================================\n";
+    cout << "Choose your colors and paints to estimate your cost.\n";
+}
 
-    int extraColors = 0;
-    int menuChoice = 0;
-    int potsNeeded = 0;
-
-    double potPrice = 0.0;
-    double totalEstimatedCost = 0.0;
-
-
-    // additional paint variables
-    int primerPots = 0;
-    int metallicPots = 0;
-    int washPots = 0;
-
-    double primerPrice = 0.0;
-    double metallicPrice = 0.0;
-    double washPrice = 0.0;
-    double additionalPaintCost = 0.0;
-
-
-    // selection flags
-    bool baseColorSelected = false;
-    bool theorySelected = false;
-    bool brandSelected = false;
-    bool running = true;
-
-
-    // main menu loop
-	// conditional while loop using the running flag
-    while (running)
+// Check that input contains at least one nonblank character.
+bool isValidText(string text)
+{
+    for (int index = 0; index < text.length(); index++)
     {
-        displayMainMenu(baseColor, theoryName, brandName);
-
-        cin >> menuChoice;
-
-
-		// error handling for invalid input
-        if (cin.fail())
+        if (text[index] != ' ' && text[index] != '\t')
         {
-            cin.clear();
-            cin.ignore(1000, '\n');
-
-            cout << "\nInvalid input. Please enter a number "
-                << "from 1 through 9.\n";
-
-            continue;
-        }
-
-
-        // main menu switch
-        switch (menuChoice)
-        {
-        case 1: // base color selection
-            selectBaseColor(baseColor, baseColorSelected);
-            break;
-
-        case 2: // color theory selection
-            selectColorTheory(extraColors, theoryName, theorySelected);
-            break;
-
-        case 3: // paint brand selection
-            selectPaintBrand(potPrice, brandName, brandSelected);
-            break;
-
-        case 4: // additional paint selection
-            selectAdditionalPaints(primerPots, primerPrice, metallicPots,
-                metallicPrice, washPots, washPrice, additionalPaintCost);
-            break;
-
-
-        case 5: // display report in console
-        {
-            // A report requires the three primary selections.
-            if (!baseColorSelected || !theorySelected || !brandSelected)
-            {
-                cout << "\nPlease complete the base color, "
-                    << "color theory, and paint brand selections first.\n";
-                break;
-            }
-
-            // Calculate the number of base pots and the total cost.
-            potsNeeded = extraColors + 1;
-            totalEstimatedCost = (potsNeeded * potPrice) + additionalPaintCost;
-
-            // Send the table to the console.
-            writeReportTable(cout, baseColor, theoryName, brandName, extraColors,
-                potPrice, potsNeeded, primerPots, metallicPots, washPots,
-                additionalPaintCost, totalEstimatedCost);
-            break;
-        }
-
-        case 6: // output report to file
-        {
-            // A report requires the three primary selections.
-            if (!baseColorSelected || !theorySelected || !brandSelected)
-            {
-                cout << "Please complete the base color, " << endl;
-                cout << "color theory, and paint brand selections first.\n";
-                break;
-            }
-
-            // Calculate the number of base pots and the total cost.
-            potsNeeded = extraColors + 1;
-            totalEstimatedCost = (potsNeeded * potPrice) + additionalPaintCost;
-
-            // Open the file before writing the report table.
-            ofstream outFile("report.txt");
-            if (!outFile)
-            {
-                cout << "Unable to create report.txt.\n";
-                break;
-            }
-
-            // Write the same table used by the console report.
-            outFile << "==================================================\n";
-            outFile << "   MPSP (MINIATURE PAINT SCHEME PLANNER) REPORT   \n";
-            outFile << "==================================================\n\n";
-            writeReportTable(outFile, baseColor, theoryName, brandName, extraColors,
-                potPrice, potsNeeded, primerPots, metallicPots, washPots,
-                additionalPaintCost, totalEstimatedCost);
-
-            cout << "Report successfully compiled and saved to "
-                << "'report.txt'!\n";
-            break;
-        }
-
-        case 7: // change console text color
-        {
-            changeTextColor();
-            break;
-        }
-
-        case 8: // display the opening banner again
-        {
-            displayOpeningBanner();
-            break;
-        }
-
-        case 9: // exit program
-        {
-            cout << "Thank you for using MPSP!\n";
-            running = false;
-
-            break;
-        }
-
-		default: // invalid menu choice
-        {
-            cout << "Invalid menu choice. Please enter a number "
-                << "from 1 through 9.\n";
-
-            break;
-        }
+            return true;
         }
     }
 
-
-    return 0;
+    return false;
 }
 
-// Displays the main menu and the current selections.
-void displayMainMenu(const string& baseColor, const string& theoryName,
-    const string& brandName)
+// Read a complete nonempty text answer.
+bool readText(string prompt, string& answer)
 {
-    cout << "======================================================\n";
-    cout << "                      MAIN MENU\n";
-    cout << "======================================================\n";
-    cout << "1. Select base color: " << baseColor << "\n";
-    cout << "2. Select color theory: " << theoryName << "\n";
-    cout << "3. Select paint brand: " << brandName << "\n";
+    cout << prompt;
+    getline(cin, answer);
+
+    while (cin && !isValidText(answer))
+    {
+        cout << "Please enter a nonempty answer: ";
+        getline(cin, answer);
+    }
+
+    return !cin.fail();
+}
+
+// Collect and validate a whole number within the allowed range.
+bool readInteger(string prompt, int minimum, int maximum, int& answer)
+{
+    const int INPUT_LIMIT = 10000;
+
+    cout << prompt;
+    cin >> answer;
+
+    while (cin.fail() || answer < minimum || answer > maximum ||
+        (!cin.eof() && cin.peek() != '\n'))
+    {
+        if (cin.eof())
+        {
+            return false;
+        }
+
+        cin.clear();
+        cin.ignore(INPUT_LIMIT, '\n');
+
+        cout << "Enter a whole number from " << minimum
+            << " through " << maximum << ": ";
+        cin >> answer;
+    }
+
+    // Remove the newline before any later getline call.
+    if (!cin.eof())
+    {
+        cin.ignore(INPUT_LIMIT, '\n');
+    }
+
+    return true;
+}
+
+// Collect and validate a nonnegative price.
+bool readPrice(string prompt, double& price)
+{
+    const int INPUT_LIMIT = 10000;
+
+    cout << prompt;
+    cin >> price;
+
+    while (cin.fail() || price < 0 ||
+        (!cin.eof() && cin.peek() != '\n'))
+    {
+        if (cin.eof())
+        {
+            return false;
+        }
+
+        cin.clear();
+        cin.ignore(INPUT_LIMIT, '\n');
+
+        cout << "Enter a price of 0 or more: $";
+        cin >> price;
+    }
+
+    if (!cin.eof())
+    {
+        cin.ignore(INPUT_LIMIT, '\n');
+    }
+
+    return true;
+}
+
+void displayMainMenu(string baseColor, string theoryName, string brandName)
+{
+    cout << "\n==================================================\n";
+    cout << "                     MAIN MENU\n";
+    cout << "==================================================\n";
+    cout << "1. Select base color: " << baseColor << endl;
+    cout << "2. Select color theory: " << theoryName << endl;
+    cout << "3. Select paint brand: " << brandName << endl;
     cout << "4. Select additional paints\n";
     cout << "5. View report\n";
     cout << "6. Output report file\n";
     cout << "7. Change text color\n";
     cout << "8. Display opening banner\n";
     cout << "9. Exit\n";
-    cout << "======================================================\n";
-    cout << "Enter your choice: ";
+    cout << "10. Enter three extra paint prices\n";
 }
 
-// Gets and stores the user's base paint color.
-void selectBaseColor(string& baseColor, bool& baseColorSelected)
+bool selectBaseColor(string& baseColor)
 {
-    cin.ignore(1000, '\n');
-    cout << "\nEnter the name of your base paint color: ";
-    getline(cin, baseColor);
-
-    if (baseColor.empty())
-    {
-        cout << "\nYou must enter a paint color.\n";
-        return;
-    }
-
-    cout << "\n> You selected " << baseColor
-        << " as your base color.\n";
-    baseColorSelected = true;
+    return readText("\nEnter your base paint color: ", baseColor);
 }
 
-// Gets the selected color theory and determines how many extra colors it needs.
-void selectColorTheory(int& extraColors, string& theoryName,
-    bool& theorySelected)
+bool selectColorTheory(int& extraColors, string& theoryName)
 {
-    int theoryChoice;
+    const int MIN_CHOICE = 1;
+    const int MAX_CHOICE = 6;
+    int choice = 0;
 
-    cout << "\nPlease select the number for color theory to apply:\n";
+    cout << "\nChoose your color theory:\n";
     cout << "1. Analogous\n";
     cout << "2. Complementary\n";
     cout << "3. Split Complementary\n";
     cout << "4. Triadic\n";
     cout << "5. Tetradic\n";
     cout << "6. Square\n";
-    cout << "Enter your choice (1-6): ";
-    cin >> theoryChoice;
 
-    if (cin.fail())
+    if (!readInteger("Enter your choice: ", MIN_CHOICE, MAX_CHOICE, choice))
     {
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "\nInvalid input. Please enter a number from 1 through 6.\n";
-        return;
+        return false;
     }
 
-    switch (theoryChoice)
+    // Keep Dakota's existing color-theory selections and counts.
+    switch (choice)
     {
     case 1:
         theoryName = "Analogous";
         extraColors = 2;
         break;
+
     case 2:
         theoryName = "Complementary";
         extraColors = 2;
         break;
+
     case 3:
         theoryName = "Split Complementary";
         extraColors = 3;
         break;
+
     case 4:
         theoryName = "Triadic";
         extraColors = 2;
         break;
+
     case 5:
         theoryName = "Tetradic";
         extraColors = 3;
         break;
+
     case 6:
         theoryName = "Square";
         extraColors = 4;
         break;
-    default:
-        cout << "\nInvalid choice. Using Complementary color theory.\n";
-        theoryName = "Complementary";
-        extraColors = 2;
-        break;
     }
 
-    cout << "\n> You selected " << theoryName << " color theory.\n";
-    theorySelected = true;
+    cout << "Selected " << theoryName << ".\n";
+    return true;
 }
 
-// Gets the selected paint brand and stores its price for the report.
-void selectPaintBrand(double& potPrice, string& brandName,
-    bool& brandSelected)
+bool selectPaintBrand(double& potPrice, string& brandName)
 {
-    int brandChoice;
+    const double ARMY_PAINTER_PRICE = 5.13;
+    const double VALLEJO_PRICE = 3.39;
+    const double CITADEL_PRICE = 4.75;
 
-    cout << "\nPlease select your preferred paint brand:\n";
-    cout << "1. The Army Painter\n";
-    cout << "2. Vallejo\n";
-    cout << "3. Citadel Colour\n";
-    cout << "Enter your choice (1-3): ";
-    cin >> brandChoice;
+    int choice = 0;
 
-    if (cin.fail())
+    cout << "\nChoose your paint brand:\n";
+    cout << ARMY_PAINTER << ". The Army Painter\n";
+    cout << VALLEJO << ". Vallejo\n";
+    cout << CITADEL << ". Citadel Colour\n";
+
+    if (!readInteger("Enter your choice: ", ARMY_PAINTER, CITADEL, choice))
     {
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "\nInvalid input. Please enter a number from 1 through 3.\n";
-        return;
+        return false;
     }
 
-    switch (brandChoice)
+    PaintBrand selectedBrand = static_cast<PaintBrand>(choice);
+
+    // Use the enum in a decision structure.
+    switch (selectedBrand)
     {
-    case 1:
+    case ARMY_PAINTER:
         brandName = "The Army Painter";
-        potPrice = 5.13;
+        potPrice = ARMY_PAINTER_PRICE;
         break;
-    case 2:
+
+    case VALLEJO:
         brandName = "Vallejo";
-        potPrice = 3.39;
+        potPrice = VALLEJO_PRICE;
         break;
-    case 3:
+
+    case CITADEL:
         brandName = "Citadel Colour";
-        potPrice = 4.75;
-        break;
-    default:
-        cout << "\nInvalid choice. Using Citadel Colour.\n";
-        brandName = "Citadel Colour";
-        potPrice = 4.75;
+        potPrice = CITADEL_PRICE;
         break;
     }
 
-    cout << "\n> You selected " << brandName << ".\n";
-    brandSelected = true;
+    cout << "Selected " << brandName << ".\n";
+    return true;
 }
 
-// Gets the user's yes/no choices for primer, metallic paint, and wash.
-void selectAdditionalPaints(int& primerPots, double& primerPrice,
-    int& metallicPots, double& metallicPrice, int& washPots,
-    double& washPrice, double& additionalPaintCost)
+// Collect a yes/no answer for one optional paint.
+bool readYesNo(string prompt, char& answer)
 {
-    char answer;
+    string text;
 
     do
     {
-        cout << "\nDo you need primer? ($9.99) (y/n): ";
-        cin >> answer;
-
-        if (answer != 'y' && answer != 'Y' &&
-            answer != 'n' && answer != 'N')
+        if (!readText(prompt, text))
         {
-            cout << "Invalid answer. Please enter y or n.\n";
-            cin.ignore(1000, '\n');
+            return false;
         }
-    } while (answer != 'y' && answer != 'Y' &&
-        answer != 'n' && answer != 'N');
 
-    if (answer == 'y' || answer == 'Y')
-    {
-        primerPots = 1;
-        primerPrice = 9.99;
-        cout << "Primer added.\n";
-    }
-    else
-    {
-        primerPots = 0;
-        primerPrice = 0.0;
-        cout << "Primer not added.\n";
-    }
-
-    do
-    {
-        cout << "\nDo you need a metallic paint? ($7.75) (y/n): ";
-        cin >> answer;
-
-        if (answer != 'y' && answer != 'Y' &&
-            answer != 'n' && answer != 'N')
+        if (text.length() == 1 &&
+            (text[0] == 'y' || text[0] == 'Y' ||
+                text[0] == 'n' || text[0] == 'N'))
         {
-            cout << "Invalid answer. Please enter y or n.\n";
-            cin.ignore(1000, '\n');
+            answer = text[0];
+            return true;
         }
-    } while (answer != 'y' && answer != 'Y' &&
-        answer != 'n' && answer != 'N');
 
-    if (answer == 'y' || answer == 'Y')
-    {
-        metallicPots = 1;
-        metallicPrice = 7.75;
-        cout << "Metallic paint added.\n";
-    }
-    else
-    {
-        metallicPots = 0;
-        metallicPrice = 0.0;
-        cout << "Metallic paint not added.\n";
-    }
-
-    do
-    {
-        cout << "\nDo you need a wash? ($7.75) (y/n): ";
-        cin >> answer;
-
-        if (answer != 'y' && answer != 'Y' &&
-            answer != 'n' && answer != 'N')
-        {
-            cout << "Invalid answer. Please enter y or n.\n";
-            cin.ignore(1000, '\n');
-        }
-    } while (answer != 'y' && answer != 'Y' &&
-        answer != 'n' && answer != 'N');
-
-    if (answer == 'y' || answer == 'Y')
-    {
-        washPots = 1;
-        washPrice = 7.75;
-        cout << "Wash added.\n";
-    }
-    else
-    {
-        washPots = 0;
-        washPrice = 0.0;
-        cout << "Wash not added.\n";
-    }
-
-    // Calculate the cost of all selected optional paints.
-    additionalPaintCost =
-        (primerPots * primerPrice) +
-        (metallicPots * metallicPrice) +
-        (washPots * washPrice);
-    cout << "\nAdditional paint selections saved.\n";
+        cout << "Please enter y or n.\n";
+    } while (true);
 }
 
-// Displays the program title and instructions whenever the user requests it.
-void displayOpeningBanner()
+// Fill the entire array before allowing it to be used in reports.
+bool fillPaintPrices(double prices[], int size)
 {
-    cout << "======================================================" << endl;
-    cout << "    888b     d888 8888888b.   .d8888b.  8888888b." << endl;
-    cout << "    8888b   d8888 888   Y88b d88P  Y88b 888   Y88b" << endl;
-    cout << "    88888b.d88888 888    888 Y88b.      888    888" << endl;
-    cout << "    888Y88888P888 888   d88P  'Y888b.   888   d88P" << endl;
-    cout << "    888 Y888P 888 8888888P'      'Y88b. 8888888P" << endl;
-    cout << "    888  Y8P  888 888              '888 888" << endl;
-    cout << "    888   '   888 888        Y88b  d88P 888" << endl;
-    cout << "    888       888 888         'Y8888P'  888" << endl;
-    cout << "======================================================" << endl;
-    cout << "   WELCOME TO MPSP (MINIATURE PAINT SCHEME PLANNER)" << endl;
-    cout << "======================================================" << endl;
-    cout << "This program will help you estimate the cost of your " << endl;
-    cout << "miniature paint scheme based on..." << endl;
-    cout << "your base color selection," << endl;
-    cout << "the method of color theory you'd like to use," << endl;
-    cout << "and your preferred paint brand." << endl;
+    for (int index = 0; index < size; index++)
+    {
+        cout << "\nExtra paint " << index + 1 << endl;
+
+        if (!readPrice("Enter the price without a dollar sign: ", prices[index]))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
-// formats one complete report table. The ostream parameter allows the same
-// table to be printed to the console or written to report.txt.
-void writeReportTable(ostream& report, const string& baseColor,
-    const string& theoryName, const string& brandName, int extraColors,
-    double potPrice, int potsNeeded, int primerPots, int metallicPots,
-    int washPots, double additionalPaintCost, double totalEstimatedCost)
+// Calculate a total using the elements stored in the array.
+double calculatePaintTotal(const double prices[], int size)
 {
-    
-    report << left << setw(30) << "REPORT ITEM"
-        << right << setw(20) << "VALUE" << endl;
-    report << string(50, '-') << endl;
+    double total = 0.0;
 
-    
-    report << left << setw(30) << setfill('.') << "Base Color Selection:"
-        << right << setw(20) << baseColor << endl;
-    report << left << setw(30) << setfill('.') << "Color Theory Selected:"
-        << right << setw(20) << theoryName << endl;
-    report << left << setw(30) << setfill('.') << "Additional Colors Needed:"
-        << right << setw(20) << extraColors << endl;
+    for (int index = 0; index < size; index++)
+    {
+        total = total + prices[index];
+    }
 
-    
-    report << fixed << setprecision(2);
-    report << left << setw(30) << setfill('.') << "Preferred Paint Brand:"
-        << right << setw(20) << brandName << endl;
-    report << left << setw(30) << setfill('.') << "Cost per Paint Pot:"
-        << right << "$" << setw(19) << potPrice << endl;
-    report << left << setw(30) << setfill('.') << "Estimated Base Pots Needed:"
-        << right << setw(20) << potsNeeded << endl;
-    report << left << setw(30) << setfill('.') << "Primer Pots:"
-        << right << setw(20) << primerPots << endl;
-    report << left << setw(30) << setfill('.') << "Metallic Pots:"
-        << right << setw(20) << metallicPots << endl;
-    report << left << setw(30) << setfill('.') << "Wash Pots:"
-        << right << setw(20) << washPots << endl;
-    report << left << setw(30) << setfill('.') << "Additional Paint Cost:"
-        << right << "$" << setw(19) << additionalPaintCost << endl;
-
-    
-    report << string(50, '-') << endl;
-    report << left << setw(30) << setfill('.') << "Total Estimated Paint Cost:"
-        << right << "$" << setw(19) << totalEstimatedCost << endl;
-    report << setfill(' ') << string(50, '=') << endl;
+    return total;
 }
 
-// Lets the user choose one of five simple console text colors.
+double calculateTotalCost(int potsNeeded, double potPrice,
+    double optionalPaintCost, double extraPaintCost)
+{
+    return potsNeeded * potPrice + optionalPaintCost + extraPaintCost;
+}
+
+// Use this function for both console output and file output.
+void writeReportTable(ostream& report, string baseColor,
+    string theoryName, string brandName, int potsNeeded,
+    double potPrice, int primerPots, int metallicPots, int washPots,
+    double optionalPaintCost, const double extraPrices[],
+    int size, bool extraPricesEntered, double totalCost)
+{
+    const int LABEL_WIDTH = 32;
+    const int VALUE_WIDTH = 20;
+    const int LINE_WIDTH = LABEL_WIDTH + VALUE_WIDTH;
+    const int MONEY_DECIMALS = 2;
+
+    report << fixed << setprecision(MONEY_DECIMALS);
+    report << "\nMINIATURE PAINT SCHEME PLANNER REPORT\n";
+    report << string(LINE_WIDTH, '=') << endl;
+    report << left << setw(LABEL_WIDTH) << "REPORT ITEM"
+        << right << setw(VALUE_WIDTH) << "VALUE" << endl;
+    report << string(LINE_WIDTH, '-') << endl;
+
+    report << left << setw(LABEL_WIDTH) << "Base color:"
+        << right << setw(VALUE_WIDTH) << baseColor << endl;
+    report << left << setw(LABEL_WIDTH) << "Color theory:"
+        << right << setw(VALUE_WIDTH) << theoryName << endl;
+    report << left << setw(LABEL_WIDTH) << "Paint brand:"
+        << right << setw(VALUE_WIDTH) << brandName << endl;
+    report << left << setw(LABEL_WIDTH) << "Base paint pots:"
+        << right << setw(VALUE_WIDTH) << potsNeeded << endl;
+    report << left << setw(LABEL_WIDTH) << "Price per pot ($):"
+        << right << setw(VALUE_WIDTH) << potPrice << endl;
+    report << left << setw(LABEL_WIDTH) << "Primer pots:"
+        << right << setw(VALUE_WIDTH) << primerPots << endl;
+    report << left << setw(LABEL_WIDTH) << "Metallic pots:"
+        << right << setw(VALUE_WIDTH) << metallicPots << endl;
+    report << left << setw(LABEL_WIDTH) << "Wash pots:"
+        << right << setw(VALUE_WIDTH) << washPots << endl;
+    report << left << setw(LABEL_WIDTH) << "Optional paint cost ($):"
+        << right << setw(VALUE_WIDTH) << optionalPaintCost << endl;
+
+    report << string(LINE_WIDTH, '-') << endl;
+    report << "EXTRA PAINT PURCHASES\n";
+
+    if (extraPricesEntered)
+    {
+        for (int index = 0; index < size; index++)
+        {
+            report << "Extra paint " << index + 1 << " ($)"
+                << right << setw(VALUE_WIDTH)
+                << extraPrices[index] << endl;
+        }
+
+        report << left << setw(LABEL_WIDTH) << "Extra paint total ($):"
+            << right << setw(VALUE_WIDTH)
+            << calculatePaintTotal(extraPrices, size) << endl;
+    }
+    else
+    {
+        report << "Extra paint prices have not been entered.\n";
+    }
+
+    report << string(LINE_WIDTH, '-') << endl;
+    report << left << setw(LABEL_WIDTH) << "Total estimated cost ($):"
+        << right << setw(VALUE_WIDTH) << totalCost << endl;
+    report << string(LINE_WIDTH, '=') << endl;
+}
+
+bool saveReport(string baseColor, string theoryName, string brandName,
+    int potsNeeded, double potPrice, int primerPots, int metallicPots,
+    int washPots, double optionalPaintCost, const double extraPrices[],
+    int size, bool extraPricesEntered, double totalCost)
+{
+    ofstream report("report.txt");
+
+    if (!report)
+    {
+        return false;
+    }
+
+    writeReportTable(report, baseColor, theoryName, brandName,
+        potsNeeded, potPrice, primerPots, metallicPots, washPots,
+        optionalPaintCost, extraPrices, size, extraPricesEntered, totalCost);
+
+    report.close();
+    return !report.fail();
+}
+
 void changeTextColor()
 {
-    int colorChoice;
+    const int COLOR_COUNT = 5;
+    const int MIN_CHOICE = 1;
+    const int colors[COLOR_COUNT] = { 9, 10, 11, 12, 14 };
+
+    int choice = 0;
 
     cout << "\nChoose a text color:\n";
     cout << "1. Blue\n";
@@ -525,33 +395,233 @@ void changeTextColor()
     cout << "3. Cyan\n";
     cout << "4. Red\n";
     cout << "5. Yellow\n";
-    cout << "Enter your choice (1-5): ";
-    cin >> colorChoice;
 
-    // windows console color attributes used by the five menu choices.
-    const int colors[] = { 9, 10, 11, 12, 14 };
-
-    if (cin.fail() || colorChoice < 1 || colorChoice > 5)
+    if (readInteger("Enter your choice: ", MIN_CHOICE, COLOR_COUNT, choice))
     {
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Invalid color choice. Please enter a number from 1 through 5.\n";
-        return;
-    }
+        SetConsoleTextAttribute(
+            GetStdHandle(STD_OUTPUT_HANDLE), colors[choice - 1]);
 
-    SetConsoleTextAttribute(
-        GetStdHandle(STD_OUTPUT_HANDLE), colors[colorChoice - 1]);
-    cout << "Text color changed.\n";
+        cout << "Text color changed.\n";
+    }
 }
 
+int main()
+{
+    const int EXTRA_PAINT_COUNT = 3;
+    const int MIN_MENU_CHOICE = 1;
+    const int MAX_MENU_CHOICE = 10;
+    const int BASE_COLOR_POTS = 1;
+    const int ONE_POT = 1;
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+    const double PRIMER_PRICE = 9.99;
+    const double METALLIC_PRICE = 7.75;
+    const double WASH_PRICE = 7.75;
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+    string baseColor;
+    string theoryName;
+    string brandName;
+
+    int extraColors = 0;
+    int menuChoice = 0;
+    int primerPots = 0;
+    int metallicPots = 0;
+    int washPots = 0;
+
+    double potPrice = 0.0;
+    double extraPaintPrices[EXTRA_PAINT_COUNT] = {};
+
+    bool baseColorSelected = false;
+    bool theorySelected = false;
+    bool brandSelected = false;
+    bool extraPricesEntered = false;
+    bool running = true;
+
+    displayOpeningBanner();
+
+    do
+    {
+        displayMainMenu(baseColor, theoryName, brandName);
+
+        if (!readInteger("Enter your choice: ",
+            MIN_MENU_CHOICE, MAX_MENU_CHOICE, menuChoice))
+        {
+            break;
+        }
+
+        switch (menuChoice)
+        {
+        case 1:
+            if (selectBaseColor(baseColor))
+            {
+                baseColorSelected = true;
+            }
+            else
+            {
+                running = false;
+            }
+            break;
+
+        case 2:
+            if (selectColorTheory(extraColors, theoryName))
+            {
+                theorySelected = true;
+            }
+            else
+            {
+                running = false;
+            }
+            break;
+
+        case 3:
+            if (selectPaintBrand(potPrice, brandName))
+            {
+                brandSelected = true;
+            }
+            else
+            {
+                running = false;
+            }
+            break;
+
+        case 4:
+        {
+            char answer = 'n';
+
+            if (!readYesNo("\nAdd primer for $9.99? (y/n): ", answer))
+            {
+                running = false;
+                break;
+            }
+
+            // A lowercase or uppercase yes adds one primer pot.
+            if ((answer == 'y' || answer == 'Y') && !cin.fail())
+            {
+                primerPots = ONE_POT;
+            }
+            else
+            {
+                primerPots = 0;
+            }
+
+            if (!readYesNo("Add metallic paint for $7.75? (y/n): ", answer))
+            {
+                running = false;
+                break;
+            }
+
+            // A lowercase or uppercase yes adds one metallic pot.
+            if ((answer == 'y' || answer == 'Y') && !cin.fail())
+            {
+                metallicPots = ONE_POT;
+            }
+            else
+            {
+                metallicPots = 0;
+            }
+
+            if (!readYesNo("Add wash for $7.75? (y/n): ", answer))
+            {
+                running = false;
+                break;
+            }
+
+            if (answer == 'y' || answer == 'Y')
+            {
+                washPots = ONE_POT;
+            }
+            else
+            {
+                washPots = 0;
+            }
+
+            cout << "Optional paint selections saved.\n";
+            break;
+        }
+
+        case 5:
+        case 6:
+        {
+            if (!baseColorSelected || !theorySelected || !brandSelected)
+            {
+                cout << "Select a base color, color theory, "
+                    << "and paint brand first.\n";
+                break;
+            }
+
+            int potsNeeded = extraColors + BASE_COLOR_POTS;
+
+            double optionalPaintCost =
+                primerPots * PRIMER_PRICE +
+                metallicPots * METALLIC_PRICE +
+                washPots * WASH_PRICE;
+
+            double extraPaintCost = 0.0;
+
+            // Only use the array after all entries have been filled.
+            if (extraPricesEntered)
+            {
+                extraPaintCost =
+                    calculatePaintTotal(extraPaintPrices, EXTRA_PAINT_COUNT);
+            }
+
+            double totalCost = calculateTotalCost(
+                potsNeeded, potPrice, optionalPaintCost, extraPaintCost);
+
+            if (menuChoice == 5)
+            {
+                writeReportTable(cout, baseColor, theoryName, brandName,
+                    potsNeeded, potPrice, primerPots, metallicPots,
+                    washPots, optionalPaintCost, extraPaintPrices,
+                    EXTRA_PAINT_COUNT, extraPricesEntered, totalCost);
+            }
+            else
+            {
+                if (saveReport(baseColor, theoryName, brandName,
+                    potsNeeded, potPrice, primerPots, metallicPots,
+                    washPots, optionalPaintCost, extraPaintPrices,
+                    EXTRA_PAINT_COUNT, extraPricesEntered, totalCost))
+                {
+                    cout << "Report saved to report.txt.\n";
+                }
+                else
+                {
+                    cout << "Unable to save report.txt.\n";
+                }
+            }
+
+            break;
+        }
+
+        case 7:
+            changeTextColor();
+            break;
+
+        case 8:
+            displayOpeningBanner();
+            break;
+
+        case 9:
+            cout << "Thank you for using MPSP!\n";
+            running = false;
+            break;
+
+        case 10:
+            extraPricesEntered =
+                fillPaintPrices(extraPaintPrices, EXTRA_PAINT_COUNT);
+
+            if (extraPricesEntered)
+            {
+                cout << "All three extra paint prices saved.\n";
+            }
+            else
+            {
+                cout << "Input ended before all prices were entered.\n";
+                running = false;
+            }
+            break;
+        }
+
+    } while (running);
+
+    return 0;
+}

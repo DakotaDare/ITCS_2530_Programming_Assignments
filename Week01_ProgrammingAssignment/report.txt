@@ -1,19 +1,23 @@
-==================================================
-   MPSP (MINIATURE PAINT SCHEME PLANNER) REPORT   
-==================================================
 
-REPORT ITEM                                  VALUE
---------------------------------------------------
-Base Color Selection:...................Light Blue
-Color Theory Selected:.....................Triadic
-Additional Colors Needed:........................2
-Preferred Paint Brand:.....................Vallejo
-Cost per Paint Pot:...........$...............3.39
-Estimated Base Pots Needed:......................3
-Primer Pots:.....................................1
-Metallic Pots:...................................0
-Wash Pots:.......................................1
-Additional Paint Cost:........$..............17.74
---------------------------------------------------
-Total Estimated Paint Cost:...$..............27.91
-==================================================
+MINIATURE PAINT SCHEME PLANNER REPORT
+====================================================
+REPORT ITEM                                    VALUE
+----------------------------------------------------
+Base color:                             Forest Green
+Color theory:                              Analogous
+Paint brand:                                 Vallejo
+Base paint pots:                                   3
+Price per pot ($):                              3.39
+Primer pots:                                       0
+Metallic pots:                                     0
+Wash pots:                                         0
+Optional paint cost ($):                        0.00
+----------------------------------------------------
+EXTRA PAINT PURCHASES
+Extra paint 1 ($)                2.50
+Extra paint 2 ($)                3.00
+Extra paint 3 ($)                4.50
+Extra paint total ($):                         10.00
+----------------------------------------------------
+Total estimated cost ($):                      20.17
+====================================================
